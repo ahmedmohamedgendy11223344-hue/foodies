@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>قائمة الطعام | مطعم Foodies</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <meta name="description" content="أفضل مطعم للمكرونة، البرجر، البيتزا، السلطات والمشروبات في مدينتك. اكتشف قائمتنا المميزة!">
+  <style>
+    body { 
+      margin: 0;
+      background: url("https://images.unsplash.com/photo-1481833761820-0509d3217039?q=80&w=800&auto=format&fit=crop") center/cover no-repeat; 
+      color:#333; line-height:1.6; direction:rtl;
+      min-height: 100vh;
+      font-family:"Cairo", sans-serif;
+    }
+    header {
+      background:#222; color:#fff; padding:10px 35px;
+      display:flex; justify-content:space-between; align-items:center;
+      position:relative; z-index:10;
+      box-shadow:0 2px 10px rgba(0,0,0,.06);
+      opacity:0; transform:translateY(-20px);
+      transition:opacity 0.5s, transform 0.5s;
+      direction: ltr;
+    }
+    header h1 {
+      font-size:26px;
+      color:#ff9800; cursor:pointer; position:relative;
+      opacity:0; transform:translateY(-20px);
+      transition: color 0.3s, letter-spacing 0.3s, opacity 0.5s, transform 0.5s;
+      font-weight:700;
+      letter-spacing: 1px;
+      user-select: none;
+    }
+    header h1::after {
+      content:""; position:absolute; width:0; height:3px; background:#ffa733;
+      left:0; bottom:-5px; transition:width 0.3s;
+    }
+    header h1:hover::after { width:100%; }
+    header h1:hover { letter-spacing:2px; color:#ffa733; text-shadow:0 0 8px #ffa733; }
+
+    nav ul { list-style:none; display:flex; gap:20px; align-items:center; margin: 0;}
+    nav ul li { position:relative; }
+    nav ul li a {
+      color:#fff; text-decoration:none; opacity:0; transform:translateY(-20px);
+      transition: color 0.3s, opacity 0.5s, transform 0.5s, border-bottom 0.3s;
+      padding: 4px 10px;
+      font-size: 15px;
+    }
+    nav ul li a.active, nav ul li a:focus-visible {
+      color:#ff9800;
+      border-bottom: 2px solid #ff9800;
+      outline: none;
+    }
+    nav ul li a:hover { color:#ff9800; }
+
+    .hamburger {
+      display:flex; flex-direction:column; justify-content:space-between;
+      width:36px; height:26px; cursor:pointer; margin-left:15px;
+      background: none; border: none; outline: none;
+      opacity:0; transform:translateY(-20px);
+      transition:all 0.5s;
+      padding: 0;
+    }
+    .hamburger span {
+      height:4px; background:#ffa500; border-radius:3px; transition:all 0.3s;
+    }
+    .hamburger:hover span:nth-child(1){ transform:rotate(45deg) translate(5px,5px);}
+    .hamburger:hover span:nth-child(2){ opacity:0;}
+    .hamburger:hover span:nth-child(3){ transform:rotate(-45deg) translate(6px,-6px);}
+    .hamburger:focus-visible { box-shadow: 0 0 0 2px #ff9800; }
+
+    .overlay {
+      position:fixed; top:0; left:0; width:100vw; height:100vh;
+      background:rgba(0,0,0,0.95); display:none; z-index:9999;
+      justify-content:center; align-items:center; flex-direction:column;
+      perspective: 1000px;
+      opacity:0; transform:scale(0.95);
+      transition:opacity 0.3s, transform 0.3s;
+    }
+    .overlay.active { display:flex; }
+    .overlay.visible { opacity:1; transform:scale(1); }
+    .overlay-content {
+      display:flex; flex-direction:column; gap:30px; text-align:center;
+    }
+    .overlay-content a {
+      color:#fff; font-size:32px; text-decoration:none;
+      transition: transform 0.3s, color 0.3s, text-shadow 0.3s;
+      display:inline-block;
+      outline: none;
+    }
+    .overlay-content a:hover, .overlay-content a:focus-visible {
+      color:#ff9800;
+      transform: scale(1.1) rotateX(10deg) rotateY(5deg) translateZ(5px);
+      text-shadow: 0 0 12px rgba(255, 152, 0, 0.8);
+    }
+
+    .hero {
+      position: relative;
+      height: 50vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      border-radius: 15px;
+      margin: 40px auto;
+      max-width: 1000px;
+      overflow: hidden;
+      background: none;
+    }
+    .hero-video {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.36);
+      z-index: 2;
+    }
+    .hero h2 {
+      font-size: 32px;
+      padding: 13px 24px;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      position: relative;
+      z-index: 3;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 1.2s ease forwards;
+      border-bottom: 3px solid #ffa733;
+      font-weight:700;
+      letter-spacing:1px;
+      cursor: pointer;
+      transition:
+        transform 0.45s cubic-bezier(.21,1.02,.73,1),
+        box-shadow 0.4s,
+        color 0.3s,
+        border-bottom-color 0.3s,
+        text-shadow 0.4s;
+    }
+    .hero h2:hover, .hero h2:focus-visible {
+      color: #ffd44a;
+      transform: scale(1.07) translateY(-4px) rotateZ(-1.5deg);
+      border-bottom-color: #ffe185;
+      text-shadow: 0 0 20px #ff9800aa, 0 4px 24px #333a;
+      box-shadow: 0 6px 20px 0 #ff980055;
+    }
+
+    .menu { max-width:1200px; margin:40px auto; padding:0 20px; }
+    .menu h2 { 
+      text-align:center; 
+      font-size:26px; 
+      margin-bottom:30px; 
+      color:#fff;
+      animation: fadeIn 1.5s; 
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+    .menu-grid {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+      gap:20px;
+    }
+    .menu-item {
+      position:relative; 
+      background:#fff; 
+      border-radius:10px; 
+      overflow:hidden;
+      text-align:center; 
+      opacity:0; 
+      transform:translateY(30px) scale(1) rotateZ(1deg);
+      transition:
+        transform 0.6s cubic-bezier(.21,1.02,.73,1),
+        box-shadow 0.5s,
+        opacity 0.8s;
+      box-shadow:0 4px 12px rgba(0,0,0,0.1);
+      min-height:320px; /* تقليل ارتفاع الكارت */
+      transform-style: preserve-3d;
+      will-change: transform, opacity;
+      display:flex; flex-direction:column; justify-content:space-between;
+    }
+    .menu-item.visible {
+      opacity:1; 
+      transform:translateY(0) scale(1) rotateZ(0deg);
+    }
+    .menu-item img {
+      width:100%; height:300px; object-fit:cover;
+      transition:filter 0.5s, transform 0.5s;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.2);
+      display:block;
+      background: #eee;
+      border-bottom:1px solid #eee;
+    }
+    .menu-item .info { padding:10px; } /* تقليل المسافة السفلية */
+    .menu-item h3 { margin-bottom:10px; font-size:20px; color:#333; font-weight:700; }
+    .menu-item a {
+      display:inline-block; margin-top:10px; padding:8px 15px;
+      background:#ff9800; color:#fff; text-decoration:none; border-radius:5px;
+      transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+      font-weight:600;
+      box-shadow: 0 2px 8px rgba(255,152,0,0.07);
+      font-size:15px;
+    }
+    .menu-item:hover, .menu-item:focus-within {
+      transform: scale(1.02) rotateZ(0.5deg) translateY(-6px);
+      box-shadow:0 12px 32px 0 rgba(0,0,0,0.14),0 2px 8px rgba(255,152,0,0.13);
+      z-index:2;
+    }
+    .menu-item:hover img, .menu-item:focus-within img {
+      filter: brightness(0.91) blur(0.4px);
+      transform: scale(1.03) rotateZ(-0.2deg);
+    }
+    .menu-item a:hover, .menu-item a:focus-visible { 
+      background:#e68900; 
+      transform: scale(1.05);
+      box-shadow: 0 4px 16px rgba(255,152,0,.14);
+    }
+
+    footer { background:#222; color:#fff; text-align:center; padding:20px; margin-top:40px; font-size:15px; }
+
+    @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+
+    @media (max-width:768px){
+      .hero { height: 32vh; }
+      .menu-grid { grid-template-columns: 1fr; }
+      header { padding:8px 5px; }
+      .menu h2 { font-size: 18px;}
+      .menu-item { min-height:220px; }
+      .hero h2 { font-size: 15px; padding:7px 10px;}
+      nav ul li a { font-size: 13px; }
+      header h1 { font-size: 18px;}
+      .menu-item img { height: 130px;}
+    }
+    @media (max-width:480px){
+      .hero { margin: 20px auto; }
+      .menu { margin: 20px auto; }
+      footer { font-size: 13px;}
+      .menu-item .info { padding:7px; }
+      .menu-item h3 { font-size:16px; }
+      .menu-item a { font-size:12px; }
+      .menu-item img { height: 90px;}
+    }
+    /* التعديلات المخصصة للموبايل فقط */
+    @media (max-width: 600px) {
+      body {
+        background: #f8f8f8 !important;
+      }
+      header {
+        padding: 6px 8px;
+      }
+      header h1 {
+        font-size: 16px;
+      }
+      nav ul li a {
+        font-size: 12px;
+        padding: 3px 6px;
+      }
+      .hamburger {
+        width:28px;
+        height:20px;
+      }
+      .hero {
+        height: 22vh;
+        min-height: 130px;
+        max-height: 180px;
+        border-radius: 10px;
+        margin: 18px auto;
+      }
+      .hero-video {
+        height: 100% !important;
+        min-height: 130px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+      .hero h2 {
+        font-size: 12px;
+        padding: 5px 10px;
+        white-space: nowrap;
+        border-radius: 6px;
+        border-bottom-width: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- Header -->
+<header id="main-header">
+  <h1 id="logo" tabindex="0">مطعم Foodies</h1>
+  <nav>
+    <ul>
+      <li><a href="index.html" id="link1" class="active">الرئيسية</a></li>
+      <li><a href="#" id="link2">القائمة</a></li>
+      <li><a href="#" id="link3">من نحن</a></li>
+      <li>
+        <button class="hamburger" id="hamburger" aria-label="فتح القائمة الجانبية" tabindex="0">
+          <span></span><span></span><span></span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Overlay Menu -->
+<div class="overlay" id="overlay" tabindex="-1" aria-modal="true" role="dialog">
+  <div class="overlay-content">
+    <a href="index.html">الصفحة الرئيسية</a>
+    <a href="pasta.html">أصناف المكرونة</a>
+    <a href="burger.html">أصناف البرجر</a>
+    <a href="pizza.html">أصناف البيتزا</a>
+    <a href="salad.html">قائمة السلطات</a>
+    <a href="drinks.html">قائمة المشروبات</a>
+  </div>
+</div>
+
+<!-- Hero - فيديو -->
+<section class="hero">
+  <video autoplay loop muted playsinline class="hero-video">
+    <source src="hero-video.mp4" type="video/mp4">
+    متصفحك لا يدعم عرض الفيديو.
+  </video>
+  <h2 tabindex="0">مرحبًا بك في مطعمنا</h2>
+</section>
+
+<!-- Menu Categories -->
+<section class="menu">
+  <h2>الأصناف الرئيسية</h2>
+  <div class="menu-grid">
+    <div class="menu-item" style="--i:0">
+      <img src="https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&cs=tinysrgb&w=600" alt="طبق مكرونة شهي مع صوص أحمر" loading="lazy">
+      <div class="info"><h3>مكرونة</h3><a href="pasta.html" tabindex="0">عرض الأصناف</a></div>
+    </div>
+    <div class="menu-item" style="--i:1">
+      <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=compress&cs=tinysrgb&w=600" alt="ساندوتش برجر لحم طازج" loading="lazy">
+      <div class="info"><h3>برجر</h3><a href="burger.html" tabindex="0">عرض الأصناف</a></div>
+    </div>
+    <div class="menu-item" style="--i:2">
+      <img src="https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?auto=compress&cs=tinysrgb&w=600" alt="بيتزا بالجبن والطماطم" loading="lazy">
+      <div class="info"><h3>بيتزا</h3><a href="pizza.html" tabindex="0">عرض الأصناف</a></div>
+    </div>
+    <div class="menu-item" style="--i:3">
+      <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=compress&cs=tinysrgb&w=600" alt="سلطة خضراء طازجة وصحية" loading="lazy">
+      <div class="info"><h3>سلطات</h3><a href="salad.html" tabindex="0">عرض الأصناف</a></div>
+    </div>
+    <div class="menu-item" style="--i:4">
+      <img src="https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=compress&cs=tinysrgb&w=600" alt="مشروبات باردة ومنعشة" loading="lazy">
+      <div class="info"><h3>مشروبات</h3><a href="drinks.html" tabindex="0">عرض الأصناف</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>© 2025 مطعم Foodies. جميع الحقوق محفوظة.</p>
+</footer>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  // عناصر الهيدر
+  const header = document.getElementById('main-header');
+  const logo = document.getElementById('logo');
+  const link1 = document.getElementById('link1');
+  const link2 = document.getElementById('link2');
+  const link3 = document.getElementById('link3');
+  const hamburger = document.getElementById('hamburger');
+
+  setTimeout(()=>{ header.style.opacity='1'; header.style.transform='translateY(0)'; },100);
+  setTimeout(()=>{ logo.style.opacity='1'; logo.style.transform='translateY(0)'; },0);
+  setTimeout(()=>{ link1.style.opacity='1'; link1.style.transform='translateY(0)'; },450);
+  setTimeout(()=>{ link2.style.opacity='1'; link2.style.transform='translateY(0)'; },600);
+  setTimeout(()=>{ link3.style.opacity='1'; link3.style.transform='translateY(0)'; },700);
+  setTimeout(()=>{ hamburger.style.opacity='1'; hamburger.style.transform='translateY(0)'; },900);
+
+  // ======= أنيميشن الكروت عند الظهور بالتمرير =======
+  const items = document.querySelectorAll('.menu-item');
+  function fadeInCardsOnScroll() {
+    items.forEach((item) => {
+      const rect = item.getBoundingClientRect();
+      if(rect.top < window.innerHeight-50) {
+        item.classList.add('visible');
+      }
+    });
+  }
+  fadeInCardsOnScroll();
+  window.addEventListener('scroll', fadeInCardsOnScroll);
+});
+
+// overlay
+const hamburger = document.getElementById('hamburger');
+const overlay = document.getElementById('overlay');
+
+// فتح القائمة الجانبية
+function openOverlay() {
+  overlay.classList.add('active');
+  setTimeout(()=>overlay.classList.add('visible'),10);
+  overlay.focus();
+  document.body.style.overflow = "hidden";
+}
+function closeOverlay() {
+  overlay.classList.remove('visible');
+  setTimeout(()=>overlay.classList.remove('active'),300);
+  document.body.style.overflow = "";
+}
+hamburger.addEventListener('click', openOverlay);
+hamburger.addEventListener('keydown', e => {
+  if(e.key === "Enter" || e.key === " ") openOverlay();
+});
+const menuLink = document.getElementById('link2');
+menuLink.addEventListener('click', (e)=>{
+  e.preventDefault();
+  openOverlay();
+});
+overlay.addEventListener('click', e => { 
+  if(e.target===overlay){ closeOverlay(); } 
+});
+const links = overlay.querySelectorAll('a');
+links.forEach(link=>link.addEventListener('click', closeOverlay));
+window.addEventListener('keydown', e=>{
+  if(overlay.classList.contains('active') && (e.key === 'Escape')) closeOverlay();
+});
+overlay.addEventListener('keydown', function(e){
+  if(!overlay.classList.contains('active')) return;
+  const focusables = overlay.querySelectorAll('a');
+  const first = focusables[0], last = focusables[focusables.length-1];
+  if(e.key === "Tab"){
+    if(e.shiftKey){
+      if(document.activeElement === first){ e.preventDefault(); last.focus(); }
+    } else {
+      if(document.activeElement === last){ e.preventDefault(); first.focus(); }
+    }
+  }
+});
+</script>
+</body>
+</html>

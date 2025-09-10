@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قائمة البيتزا</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:"Cairo", sans-serif; }
+
+/* الخلفية من كود المكرونة */
+body { 
+  background:url('https://images.unsplash.com/photo-1481833761820-0509d3217039?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed; 
+  background-size:cover;
+  color:#333; line-height:1.6; direction:rtl; 
+}
+
+/* الشريط العلوي */
+header {
+  background:#222; color:#fff; padding:15px 50px;
+  display:flex; justify-content:space-between; align-items:center;
+  position:relative;
+  opacity:0; transform:translateY(-20px);
+  transition:opacity 0.5s ease, transform 0.5s ease;
+}
+header h1 {
+  font-size:28px; color:#ff9800; cursor:pointer; position:relative;
+  opacity:0; transform:translateY(-20px);
+  transition: color 0.3s ease, letter-spacing 0.3s ease, opacity 0.5s ease, transform 0.5s ease;
+}
+header h1::after {
+  content:""; position:absolute; width:0; height:3px; background:#ffa733;
+  left:0; bottom:-5px; transition:width 0.3s ease;
+}
+header h1:hover::after { width:100%; }
+header h1:hover { letter-spacing:2px; color:#ffa733; text-shadow:0 0 8px #ffa733; }
+
+nav ul { list-style:none; display:flex; gap:20px; align-items:center; }
+nav ul li { position:relative; }
+nav ul li a {
+  color:#fff; text-decoration:none; opacity:0; transform:translateY(-20px);
+  transition: color 0.3s ease, opacity 0.5s ease, transform 0.5s ease;
+}
+nav ul li a:hover { color:#ff9800; }
+
+/* الهامبرغر */
+.hamburger {
+  display:flex; flex-direction:column; justify-content:space-between;
+  width:40px; height:30px; cursor:pointer; margin-left:15px;
+  opacity:0; transform:translateY(-20px);
+  transition:all 0.5s ease;
+}
+.hamburger span {
+  height:4px; background:#ffa500; border-radius:3px; transition:all 0.3s;
+}
+.hamburger:hover span:nth-child(1){ transform:rotate(45deg) translate(5px,5px);}
+.hamburger:hover span:nth-child(2){ opacity:0;}
+.hamburger:hover span:nth-child(3){ transform:rotate(-45deg) translate(6px,-6px);}
+
+/* زر العودة */
+.back-button-container {
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+  max-width: 1200px;
+  margin: 20px auto 40px auto;
+  padding: 0 20px;
+  position:relative;
+}
+.back-button {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:#ff9800;
+  color:#fff;
+  padding:8px 12px;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:bold;
+  box-shadow:0 3px 10px rgba(0,0,0,0.15);
+  transition: all 0.3s ease, transform 0.2s ease;
+  opacity:0;
+  transform: translateY(20px);
+}
+.back-button:hover {
+  background:#ffa733;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow:0 6px 15px rgba(0,0,0,0.25);
+}
+
+/* كلمة القائمة في منتصف الشاشة */
+.menu-title {
+  font-size:42px;
+  font-weight:bold;
+  color:#fff; /* أبيض */
+  text-shadow:2px 2px 6px rgba(0,0,0,0.2);
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  opacity:0;
+  animation: fadeUp 0.8s ease forwards;
+  white-space: nowrap;
+}
+
+/* Overlay */
+.overlay {
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:rgba(0,0,0,0.95); display:none; z-index:9999;
+  justify-content:center; align-items:center; flex-direction:column;
+  perspective: 1000px;
+  opacity:0; transform:scale(0.95);
+  transition:opacity 0.3s ease, transform 0.3s ease;
+}
+.overlay-content {
+  display:flex; flex-direction:column; gap:30px; text-align:center;
+}
+.overlay-content a {
+  color:#fff; font-size:32px; text-decoration:none;
+  transition: transform 0.3s ease, color 0.3s ease, text-shadow 0.3s ease;
+  display:inline-block;
+}
+.overlay-content a:hover {
+  color:#ff9800;
+  transform: scale(1.1) rotateX(10deg) rotateY(5deg) translateZ(5px);
+  text-shadow: 0 0 12px rgba(255, 152, 0, 0.8);
+}
+
+/* قائمة البيتزا */
+.menu-grid {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:20px; max-width:1200px; margin:0 auto; padding:0 20px;
+}
+.menu-item {
+  position:relative; background:#fff; border-radius:10px; overflow:hidden;
+  text-align:center; opacity:0; transform:translateY(30px);
+  transition:transform 0.5s ease, box-shadow 0.5s ease, opacity 1s ease;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1); min-height:380px;
+  transform-style: preserve-3d;
+}
+.menu-item.fade-in { opacity:1; transform:translateY(0); box-shadow:0 6px 18px rgba(0,0,0,0.15); }
+.menu-item img { width:100%; height:200px; object-fit:cover; transition:filter 0.5s ease; }
+.menu-item:hover img { filter:brightness(0.8); }
+.menu-item .info { padding:15px; }
+.menu-item h3 { margin-bottom:10px; font-size:22px; color:#333; }
+.menu-item p { margin-bottom:10px; color:#666; font-size:14px; }
+.menu-item .price { font-weight:bold; color:#ff9800; font-size:16px; }
+.menu-item:hover { transform:translateY(-15px); box-shadow:0 12px 25px rgba(0,0,0,0.25); }
+
+footer { background:#222; color:#fff; text-align:center; padding:20px; margin-top:40px; }
+footer .social { margin-top:10px; display:flex; justify-content:center; gap:15px; }
+footer .social a { color:#fff; font-size:20px; transition:color 0.3s; }
+footer .social a:hover { color:#ff9800; }
+
+@keyframes fadeUp { to { opacity:1; transform:translateX(-50%) translateY(0); } }
+@media (max-width:600px){ .menu-grid { padding:0 10px; gap:15px; } }
+</style>
+</head>
+<body>
+
+<header dir="ltr" id="main-header">
+  <h1 id="logo">مطعم Foodies</h1>
+  <nav>
+    <ul>
+      <li><a href="index.html" id="link1">الرئيسية</a></li>
+      <li><a href="#" id="link2">القائمة</a></li>
+      <li><a href="#" id="link3">من نحن</a></li>
+      <li>
+        <div class="hamburger" id="hamburger">
+          <span></span><span></span><span></span>
+        </div>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<!-- زر العودة والعنوان -->
+<div class="back-button-container" dir="ltr">
+  <a href="index.html" class="back-button">
+    <i class="fas fa-arrow-left"></i> العودة للصفحة الرئيسية
+  </a>
+  <h2 class="menu-title">قائمة البيتزا</h2>
+</div>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay">
+  <div class="overlay-content">
+    <a href="index.html" style="color:#ffd700;">الصفحة الرئيسية</a>
+    <a href="pasta.html">أصناف المكرونة</a>
+    <a href="burger.html">أصناف البرجر</a>
+    <a href="pizza.html">أصناف البيتزا</a>
+    <a href="salad.html">قائمة السلطات</a>
+    <a href="drinks.html">قائمة المشروبات</a>
+  </div>
+</div>
+
+<section class="menu">
+  <div class="menu-grid">
+    <!-- البيتزا -->
+    <div class="menu-item">
+      <img src="https://images.pexels.com/photos/16890470/pexels-photo-16890470.jpeg" alt="بيتزا مارغريتا">
+      <div class="info">
+        <h3>بيتزا مارغريتا</h3>
+        <p>بيتزا بسيطة مع صوص طماطم، جبنة موتزاريلا، وريحان طازج.</p>
+        <p class="price">85 جنيه</p>
+      </div>
+    </div>
+    <div class="menu-item">
+      <img src="https://images.pexels.com/photos/3682837/pexels-photo-3682837.jpeg" alt="بيتزا ببروني">
+      <div class="info">
+        <h3>بيتزا ببروني</h3>
+        <p>بيتزا كلاسيك مع شرائح ببروني لذيذة وجبنة موتزاريلا.</p>
+        <p class="price">120 جنيه</p>
+      </div>
+    </div>
+    <div class="menu-item">
+      <img src="https://images.pexels.com/photos/2714722/pexels-photo-2714722.jpeg" alt="بيتزا دجاج رانش">
+      <div class="info">
+        <h3>بيتزا دجاج رانش</h3>
+        <p>بيتزا غنية بقطع الدجاج المشوي وصوص رانش مميز مع موتزاريلا.</p>
+        <p class="price">130 جنيه</p>
+      </div>
+    </div>
+    <div class="menu-item">
+      <img src="https://images.pexels.com/photos/5639547/pexels-photo-5639547.jpeg" alt="بيتزا فراخ">
+      <div class="info">
+        <h3>بيتزا فراخ</h3>
+        <p>بيتزا بالدجاج المشوي وصوص طماطم جبنة موتزاريلا (بدون باربكيو).</p>
+        <p class="price">125 جنيه</p>
+      </div>
+    </div>
+    <div class="menu-item">
+      <img src="https://images.pexels.com/photos/5639973/pexels-photo-5639973.jpeg" alt="بيتزا سي فود">
+      <div class="info">
+        <h3>بيتزا سي فود</h3>
+        <p>بيتزا بحرية مع جمبري وكاليماري وصوص طماطم خفيف.</p>
+        <p class="price">140 جنيه</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 مطعم Foodies. جميع الحقوق محفوظة.</p>
+  <div class="social">
+    <a href="#"><i class="fab fa-instagram"></i></a>
+    <a href="#"><i class="fab fa-tiktok"></i></a>
+    <a href="#"><i class="fab fa-whatsapp"></i></a>
+  </div>
+</footer>
+
+<script>
+// fade-in الهيدر والكروت
+window.addEventListener('DOMContentLoaded', () => {
+  const header = document.getElementById('main-header');
+  const logo = document.getElementById('logo');
+  const link1 = document.getElementById('link1');
+  const link2 = document.getElementById('link2');
+  const link3 = document.getElementById('link3');
+  const hamburger = document.getElementById('hamburger');
+  const backButton = document.querySelector('.back-button');
+  const menuTitle = document.querySelector('.menu-title');
+
+  setTimeout(() => { header.style.opacity = '1'; header.style.transform = 'translateY(0)'; }, 100);
+  setTimeout(() => { logo.style.opacity='1'; logo.style.transform='translateY(0)'; }, 0);
+  setTimeout(() => { link1.style.opacity='1'; link1.style.transform='translateY(0)'; }, 450);
+  setTimeout(() => { link2.style.opacity='1'; link2.style.transform='translateY(0)'; }, 600);
+  setTimeout(() => { link3.style.opacity='1'; link3.style.transform='translateY(0)'; }, 700);
+  setTimeout(() => { hamburger.style.opacity='1'; hamburger.style.transform='translateY(0)'; }, 900);
+  setTimeout(() => { 
+    backButton.style.opacity='1'; 
+    backButton.style.transform='translateY(0)'; 
+  }, 1000);
+  setTimeout(() => { menuTitle.style.opacity='1'; menuTitle.style.transform='translateX(-50%) translateY(0)'; }, 1200);
+
+  const items = document.querySelectorAll('.menu-item');
+  items.forEach((item, index) => {
+    setTimeout(() => { item.classList.add('fade-in'); }, index*200);
+  });
+});
+
+// overlay مع fade-in عند الضغط على الهامبرغر
+const hamburger = document.getElementById('hamburger');
+const overlay = document.getElementById('overlay');
+hamburger.addEventListener('click', () => {
+  overlay.style.display = 'flex';
+  setTimeout(() => { overlay.style.opacity='1'; overlay.style.transform='scale(1)'; }, 10);
+});
+
+// overlay عند الضغط على الخلفية لإغلاقه
+overlay.addEventListener('click', e => {
+  if(e.target === overlay) {
+    overlay.style.opacity='0';
+    overlay.style.transform='scale(0.95)';
+    setTimeout(()=>overlay.style.display='none',300);
+  }
+});
+
+// overlay عند الضغط على أي رابط داخله لإغلاقه
+const links = overlay.querySelectorAll('a');
+links.forEach(link => link.addEventListener('click', ()=> {
+  overlay.style.opacity='0';
+  overlay.style.transform='scale(0.95)';
+  setTimeout(()=>overlay.style.display='none',300);
+}));
+
+// فتح الـ overlay عند الضغط على كلمة "القائمة"
+const menuLink = document.getElementById('link2');
+menuLink.addEventListener('click', (e) => {
+  e.preventDefault();
+  overlay.style.display = 'flex';
+  setTimeout(() => {
+    overlay.style.opacity = '1';
+    overlay.style.transform = 'scale(1)';
+  }, 10);
+});
+</script>
+
+</body>
+</html>

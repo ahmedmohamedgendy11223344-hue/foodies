@@ -24,7 +24,6 @@
       min-height: 100vh;
       background: #f8f8f8;
     }
-    /* خلفية ثابتة تغطي الشاشة بالكامل */
     .main-bg {
       position: fixed;
       left: 0; top: 0; width: 100vw; height: 100vh;
@@ -366,19 +365,19 @@
       header { padding:8px 12px; }
       header h1 { font-size:20px; }
       nav ul li a { font-size:13px; padding:3px 8px; }
-      .hero { max-width:97vw; margin:20px auto; height:32vh; min-height:120px;}
+      .hero { max-width:97vw; margin:20px auto; height:36vh; min-height:140px;} /* +20px للارتفاع */
       .hero h2 { font-size:18px; padding:7px 12px;}
       .offers { padding:0 7px;}
       .offers h2 { font-size:20px;}
-      .offer-item img { height:110px;}
-      .offer-item h3 { font-size:15px;}
+      .offer-item img { height: 170px;} /* +10px */
+      .offer-item { max-width:330px; min-height:210px; } /* -10px للطول والعرض */
       .menu { padding:0 7px; }
       .menu h2 { font-size:18px;}
-      .menu-item img { height:130px;}
+      .menu-item img { height: 210px;} /* +10px */
+      .menu-item { min-height:210px; max-width:290px; } /* -10px للطول والعرض */
       .menu-item h3 { font-size:16px;}
       .menu-item .info { padding:7px;}
       .menu-item a { font-size:13px;}
-      .menu-item { min-height:220px;}
       footer { font-size:13px;}
     }
     @media (max-width:700px){
@@ -386,16 +385,19 @@
       .menu-grid { grid-template-columns: 1fr; }
       .offer-item { max-width:95vw;}
       .menu { margin:20px auto;}
-      .menu-item img { height:90px;}
+      .menu-item img { height:100px;}
+      .menu-item { min-height:120px; max-width:95vw;}
       .menu-item h3 { font-size:15px;}
     }
     @media (max-width:480px){
-      .hero { margin: 12px auto; height: 17vh;}
+      .hero { margin: 12px auto; height: 37vh; min-height:110px;} /* +20px */
       .hero h2 { font-size:12px; padding:4px 5px;}
       .offers h2 { font-size:14px;}
-      .offer-item img { height:55px;}
+      .offer-item img { height:100px;} /* +10px */
+      .offer-item { min-height:90px; max-width:90vw;} /* -10px للطول والعرض */
       .menu h2 { font-size:15px;}
-      .menu-item img { height:55px;}
+      .menu-item img { height:70px;} /* +10px */
+      .menu-item { min-height:70px; max-width:90vw;} /* -10px للطول والعرض */
       .menu-item h3 { font-size:13px;}
       .menu-item .info { padding:4px;}
       .menu-item a { font-size:11px;}
@@ -535,7 +537,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const link2 = document.getElementById('link2');
   const link3 = document.getElementById('link3');
   const hamburger = document.getElementById('hamburger');
-
   setTimeout(()=>{ header.style.opacity='1'; header.style.transform='translateY(0)'; },100);
   setTimeout(()=>{ logo.style.opacity='1'; logo.style.transform='translateY(0)'; },0);
   setTimeout(()=>{ link1.style.opacity='1'; link1.style.transform='translateY(0)'; },450);

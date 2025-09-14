@@ -427,7 +427,11 @@
       .menu-item img { height: 60px;}
     }
     @media (max-width:480px){
-      .hero { margin: 8px auto; height:calc(34vh - 35px); min-height:90px;} /* تم تقليل 15 بيكسل إضافية */
+      .hero { 
+        margin: 8px auto; 
+        height: calc(45vh - 35px); /* كبر الهيرو وخصم 15 بيكسل زيادة من تحت */
+        min-height: 150px;        /* كبر أقل ارتفاع للهيرو */
+      }
       .hero h2 { font-size:10px; padding:2px 2px;}
       .offers h2 { font-size:11px;}
       .offer-item img { height:240px;}
@@ -454,7 +458,6 @@
 <body>
 <div class="main-bg"></div>
 <div class="main-content">
-<!-- Header -->
 <header id="main-header">
   <h1 id="logo" tabindex="0">مطعم Foodies</h1>
   <nav>
@@ -471,7 +474,6 @@
   </nav>
 </header>
 
-<!-- Overlay Menu -->
 <div class="overlay" id="overlay" tabindex="-1" aria-modal="true" role="dialog">
   <div class="overlay-content">
     <a href="index.html">الصفحة الرئيسية</a>
@@ -483,7 +485,6 @@
   </div>
 </div>
 
-<!-- Hero - فيديو -->
 <section class="hero">
   <video autoplay loop muted playsinline class="hero-video">
     <source src="hero-video.mp4" type="video/mp4">
@@ -492,7 +493,6 @@
   <h2 tabindex="0">مرحبًا بك في مطعمنا</h2>
 </section>
 
-<!-- عروض مميزة -->
 <section class="offers">
   <h2>عروض الأسبوع</h2>
   <div class="offers-grid">
@@ -535,7 +535,6 @@
   </div>
 </section>
 
-<!-- قائمة الأصناف الرئيسية -->
 <section class="menu">
   <h2>الأصناف الرئيسية</h2>
   <div class="menu-grid">
@@ -562,7 +561,6 @@
   </div>
 </section>
 
-<!-- Footer -->
 <footer>
   <p>© 2025 مطعم Foodies. جميع الحقوق محفوظة.</p>
 </footer>

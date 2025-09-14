@@ -362,76 +362,91 @@
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     /* MEDIA QUERIES للهواتف */
     @media (max-width:800px){
-      header { padding:14px 6px 8px 6px; height:54px; min-height:54px; }
-      header h1 { font-size:16px; }
-      nav ul { gap:7px;}
-      nav ul li a { font-size:12px; padding:3px 7px;}
-      .hamburger { width:20px; height:16px;}
-      .hero { max-width:97vw; margin:8px auto; height:56vh; min-height:160px;}
-      .hero h2 { font-size:14px; padding:5px 7px;}
-      .offers { padding:0 7px;}
+      header {
+        padding: 8px 6px;
+        height: 46px;
+        min-height: 46px;
+        font-size: 14px;
+        box-shadow: 0 2px 8px rgba(0,0,0,.10);
+      }
+      header h1 {
+        font-size: 15px;
+        padding: 0;
+        margin: 0;
+      }
+      nav ul { gap: 5px;}
+      nav ul li a { font-size: 11px; padding:2px 5px;}
+      .hamburger { width:18px; height:14px;}
+      .hero {
+        max-width:97vw;
+        margin:8px auto;
+        height:calc(36vh - 20px); /* قلل 20px من الارتفاع */
+        min-height:120px;
+      }
+      .hero h2 { font-size:13px; padding:3px 6px;}
+      .offers { padding:0 4px;}
       .offers h2 { font-size:15px;}
-      .offer-item img { height: 360px;} /* ضعف ارتفاع الصورة */
+      .offer-item img { height: 360px;}
       .offer-item {
-        max-width:280px;
-        min-height:170px;
-        margin: 0 10px 18px 10px; /* قلل من الجنبين 10px */
-        padding: 0 0 0 0;
+        max-width:270px !important;
+        min-height:140px !important;
+        margin: 0 10px 18px 10px;
+        padding: 0;
       }
       .offer-item .info { padding: 5px 6px; }
-      .menu { padding:0 7px; }
-      .menu h2 { font-size:15px;}
+      .menu { padding:0 4px; }
+      .menu h2 { font-size:14px;}
       .menu-grid { gap:16px;}
       .menu-item img { height: 620px;}
       .menu-item {
-        min-height:130px;
-        max-width:270px;
-        margin: 0 10px 18px 10px; /* قلل من الجنبين 10px */
-        padding: 0 0 0 0;
+        min-height:100px !important;
+        max-width:260px !important;
+        margin: 0 10px 18px 10px;
+        padding: 0;
       }
       .menu-item .info { padding:5px 6px;}
-      .menu-item h3 { font-size:13px;}
-      .menu-item a { font-size:12px;}
-      footer { font-size:12px;}
+      .menu-item h3 { font-size:12px;}
+      .menu-item a { font-size:11px;}
+      footer { font-size:11px;}
     }
     @media (max-width:600px){
       .offers-grid { grid-template-columns: 1fr; }
       .menu-grid { grid-template-columns: 1fr; gap:12px;}
       .offer-item {
-        max-width:89vw;
-        min-height:70px;
+        max-width:89vw !important;
+        min-height:40px !important;
         margin: 0 10px 18px 10px;
       }
       .menu { margin:8px auto;}
       .menu-item {
-        max-width:89vw;
-        min-height:40px;
+        max-width:89vw !important;
+        min-height:10px !important;
         margin: 0 10px 18px 10px;
       }
-      .hero { min-height:140px; }
+      .hero { min-height:110px; }
     }
     @media (max-width:480px){
-      .hero { margin: 8px auto; height:54vh; min-height:110px;}
-      .hero h2 { font-size:10px; padding:3px 2px;}
+      .hero { margin: 8px auto; height:calc(34vh - 20px); min-height:90px;}
+      .hero h2 { font-size:10px; padding:2px 2px;}
       .offers h2 { font-size:11px;}
       .offer-item img { height:240px;}
       .offer-item {
-        min-height:40px;
-        max-width:95vw;
+        min-height:20px !important;
+        max-width:95vw !important;
         margin: 0 10px 12px 10px;
       }
       .offer-item .info { padding: 2px 2px; }
-      .menu h2 { font-size:11px;}
+      .menu h2 { font-size:10px;}
       .menu-item img { height:390px;}
       .menu-item {
-        min-height:20px;
-        max-width:95vw;
+        min-height:0px !important;
+        max-width:95vw !important;
         margin: 0 10px 12px 10px;
       }
       .menu-item .info { padding:2px 2px;}
       .menu-item h3 { font-size:10px;}
-      .menu-item a { font-size:10px;}
-      footer { font-size:10px;}
+      .menu-item a { font-size:9px;}
+      footer { font-size:9px;}
     }
   </style>
 </head>

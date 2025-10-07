@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>من نحن | مطعم Foodies</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <meta name="description" content="أفضل مطعم للمكرونة، البرجر، البيتزا، السلطات والمشروبات في مدينتك. اكتشف قائمتنا المميزة!">
+  <style>
+    body {
+      margin: 0;
+      background: url("https://images.unsplash.com/photo-1481833761820-0509d3217039?q=80&w=800&auto=format&fit=crop") center/cover no-repeat;
+      color: #333;
+      line-height: 1.6;
+      direction: rtl;
+      min-height: 100vh;
+      font-family: "Cairo", sans-serif;
+    }
+    header {
+      background: #222; color: #fff; padding: 10px 35px;
+      display: flex; justify-content: space-between; align-items: center;
+      position: relative; z-index: 10;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+      direction: ltr;
+      opacity: 0; transform: translateY(-20px);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+    header h1 {
+      font-size: 26px;
+      color: #ff9800; cursor: pointer; position: relative;
+      opacity: 0; transform: translateY(-20px);
+      transition: color 0.3s, letter-spacing 0.3s, opacity 0.5s, transform 0.5s;
+      font-weight: 700;
+      letter-spacing: 1px;
+      user-select: none;
+    }
+    header h1::after {
+      content: ""; position: absolute; width: 0; height: 3px; background: #ffa733;
+      left: 0; bottom: -5px; transition: width 0.3s;
+    }
+    header h1:hover::after { width: 100%; }
+    header h1:hover { letter-spacing: 2px; color: #ffa733; text-shadow: 0 0 8px #ffa733; }
+
+    nav ul { list-style: none; display: flex; gap: 20px; align-items: center; margin: 0;}
+    nav ul li { position: relative; }
+    nav ul li a {
+      color: #fff; text-decoration: none; opacity: 0; transform: translateY(-20px);
+      transition: color 0.3s, opacity 0.5s, transform 0.5s, border-bottom 0.3s;
+      padding: 4px 10px;
+      font-size: 15px;
+    }
+    nav ul li a.active, nav ul li a:focus-visible {
+      color: #ff9800;
+      border-bottom: 2px solid #ff9800;
+      outline: none;
+    }
+    nav ul li a:hover { color: #ff9800; }
+
+    .hamburger {
+      display: flex; flex-direction: column; justify-content: space-between;
+      width: 36px; height: 26px; cursor: pointer; margin-left: 15px;
+      background: none; border: none; outline: none;
+      opacity: 0; transform: translateY(-20px);
+      transition: all 0.5s;
+      padding: 0;
+    }
+    .hamburger span {
+      height: 4px; background: #ffa500; border-radius: 3px; transition: all 0.3s;
+    }
+    .hamburger:hover span:nth-child(1){ transform: rotate(45deg) translate(5px,5px);}
+    .hamburger:hover span:nth-child(2){ opacity: 0;}
+    .hamburger:hover span:nth-child(3){ transform: rotate(-45deg) translate(6px,-6px);}
+    .hamburger:focus-visible { box-shadow: 0 0 0 2px #ff9800; }
+
+    .overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.95); display: none; z-index: 9999;
+      justify-content: center; align-items: center; flex-direction: column;
+      perspective: 1000px;
+      opacity: 0; transform: scale(0.95);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .overlay.active { display: flex; }
+    .overlay.visible { opacity: 1; transform: scale(1); }
+    .overlay-content {
+      display: flex; flex-direction: column; gap: 30px; text-align: center;
+    }
+    .overlay-content a {
+      color: #fff; font-size: 32px; text-decoration: none;
+      transition: transform 0.3s, color 0.3s, text-shadow 0.3s;
+      display: inline-block;
+      outline: none;
+    }
+    .overlay-content a:hover, .overlay-content a:focus-visible {
+      color: #ff9800;
+      transform: scale(1.1) rotateX(10deg) rotateY(5deg) translateZ(5px);
+      text-shadow: 0 0 12px rgba(255, 152, 0, 0.8);
+    }
+
+    .about-hero {
+      max-width: 900px;
+      margin: 60px auto 0 auto;
+      text-align: center;
+      color: #fff;
+      background: rgba(34, 34, 34, 0.52);
+      border-radius: 22px;
+      padding: 38px 18px 30px 18px;
+      box-shadow: 0 8px 42px #00000026;
+      position: relative;
+      z-index: 2;
+      animation: fadeIn 1.3s;
+      backdrop-filter: blur(2.5px);
+    }
+    .about-hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 18px;
+      color: #ff9800;
+      text-shadow: 0 2px 18px #ff980073;
+      letter-spacing: 1.5px;
+      font-weight: bold;
+    }
+    .about-hero p {
+      font-size: 1.25rem;
+      margin-bottom: 22px;
+      color: #fffde8;
+      line-height: 2.25;
+      text-shadow: 0 2px 8px #2229;
+    }
+    .about-features {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 22px;
+      margin: 44px 0 0 0;
+    }
+    .feature-card {
+      background: linear-gradient(135deg, #ffe3b0 0%, #ffd6ab 40%, #ffb871 100%);
+      border-radius: 14px;
+      box-shadow: 0 4px 18px #ff98001e;
+      padding: 23px 18px 17px 18px;
+      min-width: 150px; max-width: 210px;
+      text-align: center;
+      flex: 1 1 150px;
+      font-size: 1.05rem;
+      color: #935900;
+      font-weight: 500;
+      border: 1.5px solid #fff6e2;
+      margin-bottom: 5px;
+      transition: transform 0.35s, box-shadow 0.35s;
+      display: flex; flex-direction: column; align-items: center;
+      backdrop-filter: blur(0.5px);
+    }
+    .feature-card i {
+      font-size: 2.1rem;
+      color: #ff9800;
+      margin-bottom: 7px;
+      display: block;
+    }
+    .feature-card:hover {
+      transform: scale(1.08) rotateZ(-1deg);
+      box-shadow: 0 10px 28px #ff980055;
+      background: linear-gradient(120deg, #fff3d1 0%, #ffe0b2 100%);
+    }
+
+    /* ==== الشبكة: صور مع اسم الصنف بخلفية متدرجة واضحة ==== */
+    .about-gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, auto);
+      gap: 24px;
+      justify-items: center;
+      align-items: start;
+      margin: 38px auto 0 auto;
+      max-width: 820px;
+      width: 100%;
+      padding: 0 5px;
+    }
+    .about-gallery a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 260px;
+      text-decoration: none;
+      border-radius: 18px;
+      overflow: hidden;
+      transition: box-shadow 0.3s;
+      box-shadow: 0 4px 16px #ff980022;
+      position: relative;
+      background: linear-gradient(90deg,
+        rgba(170, 110, 0, 0.66) 0%,
+        rgba(255, 193, 108, 0.09) 17%,
+        rgba(255, 193, 108, 0.09) 83%,
+        rgba(170, 110, 0, 0.66) 100%);
+      border: 2.5px solid #fff4e1;
+    }
+    .about-gallery a:hover,
+    .about-gallery a:focus-visible {
+      box-shadow: 0 8px 34px #ff980055;
+      border-color: #ffd699;
+      z-index: 2;
+    }
+    .about-gallery img {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      border-radius: 16px 16px 0 0;
+      display: block;
+      transition: transform 0.4s;
+      background: transparent;
+      position: relative;
+      z-index: 1;
+    }
+    .about-gallery a:hover img,
+    .about-gallery a:focus-visible img {
+      transform: scale(1.06) rotateZ(-1.5deg);
+    }
+    .gallery-caption {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 10px 16px 10px;
+      background: rgba(120, 70, 0, 0.89); /* أغمق كثيرا */
+      color: #ffb300; /* برتقالي فاتح وواضح */
+      font-size: 1.18rem;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 0 0 16px 16px;
+      box-shadow: 0 2px 10px #ff980014;
+      transition: background 0.3s, color 0.3s;
+      line-height: 1.7;
+      letter-spacing: 0.5px;
+      min-height: 36px;
+      margin-top: 0;
+      width: 100%;
+      z-index: 2;
+      position: relative;
+      text-shadow: 0 1px 7px #fff9;
+    }
+    .about-gallery a:hover .gallery-caption,
+    .about-gallery a:focus-visible .gallery-caption {
+      background: rgba(120, 70, 0, 1);
+      color: #ff9800;
+    }
+    .about-gallery a:active .gallery-caption {
+      background: rgba(120, 70, 0, 1);
+    }
+    /* ترتيب الصور: 3 فوق، 2 تحت ومتوسطين */
+    .about-gallery a:nth-child(4) {
+      grid-column: 2 / 3;
+      grid-row: 2 / 3;
+    }
+    .about-gallery a:nth-child(5) {
+      grid-column: 3 / 4;
+      grid-row: 2 / 3;
+    }
+    @media (max-width:900px){
+      .about-gallery {
+        max-width: 98vw;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, auto);
+        gap: 10px;
+      }
+      .about-gallery a { max-width: 110px;}
+      .about-gallery img { height: 80px; }
+      .gallery-caption { font-size: 0.95rem; min-height: 25px; padding: 8px 3px 9px 3px;}
+      .about-gallery a:nth-child(1){ grid-column: 1 / 2; grid-row: 1 / 2;}
+      .about-gallery a:nth-child(2){ grid-column: 2 / 3; grid-row: 1 / 2;}
+      .about-gallery a:nth-child(3){ grid-column: 1 / 2; grid-row: 2 / 3;}
+      .about-gallery a:nth-child(4){ grid-column: 2 / 3; grid-row: 2 / 3;}
+      .about-gallery a:nth-child(5){ grid-column: 1 / 3; grid-row: 3 / 4;}
+    }
+    @media (max-width:600px){
+      .about-gallery {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(5, auto);
+        gap: 7px;
+        max-width: 98vw;
+      }
+      .about-gallery a { max-width: 100%;}
+      .about-gallery img { height: 65px;}
+      .gallery-caption { font-size: 0.89rem; min-height: 16px;}
+      .about-gallery a:nth-child(n){ grid-column: 1 / 2; }
+    }
+    @keyframes fadeIn { from {opacity:0;transform:translateY(40px);} to {opacity:1;transform:translateY(0);} }
+  </style>
+</head>
+<body>
+<!-- Header -->
+<header id="main-header">
+  <h1 id="logo" tabindex="0">مطعم Foodies</h1>
+  <nav>
+    <ul>
+      <li><a href="index.html" id="link1">الرئيسية</a></li>
+      <li><a href="foodies_menu.html" id="link2">القائمة</a></li>
+      <li><a href="about.html" id="link3" class="active">من نحن</a></li>
+      <li>
+        <button class="hamburger" id="hamburger" aria-label="فتح القائمة الجانبية" tabindex="0">
+          <span></span><span></span><span></span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Overlay Menu -->
+<div class="overlay" id="overlay" tabindex="-1" aria-modal="true" role="dialog">
+  <div class="overlay-content">
+    <a href="index.html">الصفحة الرئيسية</a>
+    <a href="pasta.html">أصناف المكرونة</a>
+    <a href="burger.html">أصناف البرجر</a>
+    <a href="pizza.html">أصناف البيتزا</a>
+    <a href="salad.html">قائمة السلطات</a>
+    <a href="drinks.html">قائمة المشروبات</a>
+    <!-- تم حذف "من نحن" من هنا حسب طلبك -->
+  </div>
+</div>
+
+<!-- محتوى من نحن بشكل جميل وبدون برواز -->
+<section class="about-hero">
+  <h2>من نحن</h2>
+  <p>
+    مطعم <b>Foodies</b> هو وجهتك المثالية لتجربة طعام لا تُنسى.<br>
+    نؤمن أن الطعام ليس مجرد وجبة، بل لحظة سعادة تستحق أن تعيشها مع من تحب.<br>
+    منذ انطلاقنا، ونحن نحرص على تقديم وصفات مبتكرة تجمع بين الجودة والأصالة في أجواء ودودة وعصرية.<br>
+    استمتع معنا بأصناف المكرونة، البرجر، البيتزا، السلطات والمشروبات، جميعها محضرة بعناية من مكونات طازجة يومياً.
+  </p>
+  <div class="about-features">
+    <div class="feature-card">
+      <i class="fa-solid fa-leaf"></i>
+      مكونات طازجة وجودة عالية
+    </div>
+    <div class="feature-card">
+      <i class="fa-solid fa-burger"></i>
+      تشكيلة متنوعة ترضي كل الأذواق
+    </div>
+    <div class="feature-card">
+      <i class="fa-solid fa-heart"></i>
+      خدمة عملاء راقية وبيئة ودودة
+    </div>
+    <div class="feature-card">
+      <i class="fa-solid fa-utensils"></i>
+      جلسات عائلية وأجواء مريحة
+    </div>
+    <div class="feature-card">
+      <i class="fa-solid fa-mug-hot"></i>
+      المشروبات المنعشة والطازجة
+    </div>
+  </div>
+  <div class="about-gallery">
+    <a href="burger.html" title="برجر">
+      <img src="https://images.pexels.com/photos/10560076/pexels-photo-10560076.jpeg" alt="برجر فوديز">
+      <span class="gallery-caption">برجر</span>
+    </a>
+    <a href="pasta.html" title="مكرونة">
+      <img src="https://images.pexels.com/photos/7664088/pexels-photo-7664088.jpeg" alt="مكرونة فوديز">
+      <span class="gallery-caption">مكرونة</span>
+    </a>
+    <a href="pizza.html" title="بيتزا">
+      <img src="https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg" alt="بيتزا فوديز">
+      <span class="gallery-caption">بيتزا</span>
+    </a>
+    <a href="salad.html" title="سلطة">
+      <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=compress&cs=tinysrgb&w=600" alt="سلطة فوديز">
+      <span class="gallery-caption">سلطة</span>
+    </a>
+    <a href="drinks.html" title="مشروبات">
+      <img src="https://images.pexels.com/photos/8880727/pexels-photo-8880727.jpeg" alt="مشروبات فوديز">
+      <span class="gallery-caption">مشروبات</span>
+    </a>
+  </div>
+</section>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  const header = document.getElementById('main-header');
+  const logo = document.getElementById('logo');
+  const link1 = document.getElementById('link1');
+  const link2 = document.getElementById('link2');
+  const link3 = document.getElementById('link3');
+  const hamburger = document.getElementById('hamburger');
+  setTimeout(()=>{ header.style.opacity='1'; header.style.transform='translateY(0)'; },100);
+  setTimeout(()=>{ logo.style.opacity='1'; logo.style.transform='translateY(0)'; },0);
+  setTimeout(()=>{ link1.style.opacity='1'; link1.style.transform='translateY(0)'; },450);
+  setTimeout(()=>{ link2.style.opacity='1'; link2.style.transform='translateY(0)'; },600);
+  setTimeout(()=>{ link3.style.opacity='1'; link3.style.transform='translateY(0)'; },700);
+  setTimeout(()=>{ hamburger.style.opacity='1'; hamburger.style.transform='translateY(0)'; },900);
+});
+
+// overlay
+const hamburger = document.getElementById('hamburger');
+const overlay = document.getElementById('overlay');
+function openOverlay() {
+  overlay.classList.add('active');
+  setTimeout(()=>overlay.classList.add('visible'),10);
+  overlay.focus();
+  document.body.style.overflow = "hidden";
+}
+function closeOverlay() {
+  overlay.classList.remove('visible');
+  setTimeout(()=>overlay.classList.remove('active'),300);
+  document.body.style.overflow = "";
+}
+if(hamburger){
+  hamburger.addEventListener('click', openOverlay);
+  hamburger.addEventListener('keydown', e => {
+    if(e.key === "Enter" || e.key === " ") openOverlay();
+  });
+}
+const menuLink = document.getElementById('link2');
+if(menuLink){
+  menuLink.addEventListener('click', (e)=>{
+    e.preventDefault();
+    openOverlay();
+  });
+}
+if(overlay){
+  overlay.addEventListener('click', e => { if(e.target===overlay){ closeOverlay(); } });
+  const links = overlay.querySelectorAll('a');
+  links.forEach(link=>link.addEventListener('click', closeOverlay));
+  window.addEventListener('keydown', e=>{
+    if(overlay.classList.contains('active') && (e.key === 'Escape')) closeOverlay();
+  });
+  overlay.addEventListener('keydown', function(e){
+    if(!overlay.classList.contains('active')) return;
+    const focusables = overlay.querySelectorAll('a');
+    const first = focusables[0], last = focusables[focusables.length-1];
+    if(e.key === "Tab"){
+      if(e.shiftKey){
+        if(document.activeElement === first){ e.preventDefault(); last.focus(); }
+      } else {
+        if(document.activeElement === last){ e.preventDefault(); first.focus(); }
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>
